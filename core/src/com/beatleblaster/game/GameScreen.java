@@ -17,7 +17,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class GameScreen implements Screen {
     final BeatleBlaster game;
     Texture enemyImage;
-    Texture ballImage;
+    Texture yellowBulletImage;
+    Texture blueBulletImage;
     Texture johnImage;
     Texture paulImage;
     Texture georgeImage;
@@ -39,11 +40,12 @@ public class GameScreen implements Screen {
 
         // load the images for the droplet and the ship, 64x64 pixels each
         enemyImage = new Texture(Gdx.files.internal("enemy.png"));
-        ballImage = new Texture(Gdx.files.internal("ball.gif"));
-        johnImage = new Texture(Gdx.files.internal("john.png"));
-        paulImage = new Texture(Gdx.files.internal("paul.png"));
-        georgeImage = new Texture(Gdx.files.internal("george.png"));
-        ringoImage = new Texture(Gdx.files.internal("ringo.png"));
+        yellowBulletImage = new Texture(Gdx.files.internal("yellow_bullet.png"));
+        blueBulletImage = new Texture(Gdx.files.internal("blue_bullet.png"));
+        johnImage = new Texture(Gdx.files.internal("A_ship.png"));
+        paulImage = new Texture(Gdx.files.internal("B_ship.png"));
+        georgeImage = new Texture(Gdx.files.internal("C_ship.png"));
+        ringoImage = new Texture(Gdx.files.internal("D_ship.png"));
 
         // create the camera and the SpriteBatch
         camera = new OrthographicCamera();
@@ -61,14 +63,21 @@ public class GameScreen implements Screen {
         class JohnGun implements Gun {
             @Override
             public void fire(GameScreen screen, Head head) {
-                if (TimeUtils.nanoTime() - head.lastShotTime > 50000000) {
-                    Bullet bullet = new Bullet(ballImage, 0.0, 1000.0);
+                if (TimeUtils.nanoTime() - head.lastShotTime > 5000000) {
+                    Bullet bullet1 = new Bullet(yellowBulletImage, 0.0, 900.0);
                     double rad = Math.toRadians( 360 * (double) TimeUtils.millis() / 1000.0 );
-                    bullet.x = head.x + head.width/2 + (int) ( head.width/3.0 * Math.cos(rad) );
-                    bullet.y = head.y;
-                    bullet.height = 5;
-                    bullet.width = 5;
-                    screen.bullets.add(bullet);
+                    bullet1.x = head.x + head.width/2 + (int) ( head.width/3.0 * Math.cos(rad) );
+                    bullet1.y = head.y;
+                    bullet1.height = 5;
+                    bullet1.width = 5;
+                    screen.bullets.add(bullet1);
+
+                    Bullet bullet2 = new Bullet(yellowBulletImage, 0.0, 900.0);
+                    bullet2.x = head.x + head.width/2 - (int) ( head.width/3.0 * Math.cos(rad) );
+                    bullet2.y = head.y;
+                    bullet2.height = 5;
+                    bullet2.width = 5;
+                    screen.bullets.add(bullet2);
                     head.lastShotTime = TimeUtils.nanoTime();
                 }
             }
@@ -76,15 +85,15 @@ public class GameScreen implements Screen {
         class PaulGun implements Gun {
             @Override
             public void fire(GameScreen screen, Head head) {
-                if (TimeUtils.nanoTime() - head.lastShotTime > 100000000) {
-                    for (int i = 0; i < 2; i++) {
-                        Bullet bullet = new Bullet(ballImage, 0.0, 1000.0);
-                        bullet.x = head.x + (head.width)*i;
-                        bullet.y = head.y;
-                        bullet.height = 5;
-                        bullet.width = 5;
-                        screen.bullets.add(bullet);
-                    }
+                if (TimeUtils.nanoTime() - head.lastShotTime > 1000000) {
+                    Bullet bullet = new Bullet(blueBulletImage, 0.0, 900.0);
+                    double rad = Math.toRadians( 360 * (double) TimeUtils.millis() / 1000.0 );
+                    bullet.x = head.x + head.width/2 + (int) ( head.width/4.0 * Math.cos(rad) );
+                    bullet.y = head.y;
+                    bullet.height = 5;
+                    bullet.width = 5;
+                    screen.bullets.add(bullet);
+                    head.lastShotTime = TimeUtils.nanoTime();
                     head.lastShotTime = TimeUtils.nanoTime();
                 }
             }
@@ -94,7 +103,7 @@ public class GameScreen implements Screen {
             public void fire(GameScreen screen, Head head) {
                 if (TimeUtils.nanoTime() - head.lastShotTime > 300000000) {
                     for (int i = 0; i < 5; i++) {
-                        Bullet bullet = new Bullet(ballImage, 0.0, 700.0);
+                        Bullet bullet = new Bullet(yellowBulletImage, 0.0, 700.0);
                         bullet.x = head.x + (head.width /2);
                         bullet.y = head.y-i;
                         bullet.height = 5;
@@ -113,7 +122,7 @@ public class GameScreen implements Screen {
                         double angle = Math.toRadians(93.0 - 1.5*i);
                         double dx = 1000.0 * Math.cos(angle);
                         double dy = 1000.0 * Math.sin(angle);
-                        Bullet bullet = new Bullet(ballImage, dx, dy);
+                        Bullet bullet = new Bullet(yellowBulletImage, dx, dy);
                         bullet.x = head.x + (head.width/5)*i;
                         bullet.y = head.y - Math.abs(2*(i-2));
                         bullet.height = 5;
@@ -124,10 +133,10 @@ public class GameScreen implements Screen {
                 }
             }
         }
-        heads.add( new Head(johnImage, 90, new Color(0.95f, 0.26f, 0.78f, 1), new JohnGun()) );
-        heads.add( new Head(paulImage, 180, new Color(0.26f, 0.78f, 0.95f, 1), new PaulGun()) );
-        heads.add( new Head(georgeImage, 0, new Color(0.95f, 0.26f, 0.26f, 1), new GeorgeGun()) );
-        heads.add( new Head(ringoImage, 270, new Color(0.61f, 0.95f, 0.26f, 1), new RingoGun()) );
+        heads.add( new Head(johnImage, 90, new Color(1.0f, 0.0f, 1.0f, 1), new JohnGun()) );
+        heads.add( new Head(paulImage, 180, new Color(0.0f, 1.0f, 1.0f, 1), new PaulGun()) );
+        heads.add( new Head(georgeImage, 0, new Color(1.0f, 0.0f, 0.0f, 1), new GeorgeGun()) );
+        heads.add( new Head(ringoImage, 270, new Color(0.0f, 1.0f, 0.0f, 1), new RingoGun()) );
 
         // create the enemies array and spawn the first enemy
         enemies = new Array<Actor>();
@@ -142,7 +151,7 @@ public class GameScreen implements Screen {
     }
 
     private void spawnEnemy() {
-        Actor enemy = new Actor(enemyImage);
+        Actor enemy = new Actor(enemyImage, 20 + MathUtils.random(0, 40));
         enemy.x = MathUtils.random(0, 500 - 64);
         enemy.y = 1600;
         enemies.add(enemy);
@@ -173,6 +182,9 @@ public class GameScreen implements Screen {
         if (angle % 90 == 0) {
             rotating = 0;
         }
+        for (Bullet bullet : bullets) {
+            game.batch.draw(bullet.image, bullet.x, bullet.y, bullet.width, bullet.height);
+        }
         Head topHead = null;
         Iterator<Head> headIter = heads.iterator();
         while (headIter.hasNext()) {
@@ -198,11 +210,9 @@ public class GameScreen implements Screen {
         }
         game.font.setColor(1,1,1,1);
         game.font.draw( game.batch, Integer.toString(score),textX + 100, textY );
+        game.font.draw( game.batch, "+",textX, textY );
         for (Actor enemy : enemies) {
             game.batch.draw(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height);
-        }
-        for (Bullet bullet : bullets) {
-            game.batch.draw(bullet.image, bullet.x, bullet.y, bullet.width, bullet.height);
         }
         game.batch.end();
 
@@ -219,30 +229,28 @@ public class GameScreen implements Screen {
             rotating = 1;
         if (Gdx.input.isKeyJustPressed(Keys.R))
             rotating = -1;
-        if (Gdx.input.isKeyPressed(Keys.SPACE))
+        if (Gdx.input.isKeyPressed(Keys.SPACE)) {
             if (topHead != null) {
                 topHead.shoot(this);
             }
+        }
 
         // make sure the ship stays within the screen bounds
-        if (ship.x < 30)
-            ship.x = 30;
-        if (ship.x > 500 - 60)
-            ship.x = 500 - 60;
-        if (ship.y < 30)
-            ship.y = 30;
+        if (ship.x < 40)
+            ship.x = 40;
+        if (ship.x > 500 - 40)
+            ship.x = 500 - 40;
+        if (ship.y < 40)
+            ship.y = 40;
 
         // check if we need to create a new enemy
         if (TimeUtils.nanoTime() - lastDropTime > 200000000)
             spawnEnemy();
 
-        // move the enemies, remove any that are beneath the bottom edge of
-        // the screen or that hit the john. In the later case we play back
-        // a sound effect as well.
         Iterator<Actor> iter = enemies.iterator();
         while (iter.hasNext()) {
             Actor enemy = iter.next();
-            enemy.y -= 800 * Gdx.graphics.getDeltaTime();
+            enemy.y -= enemy.dy * Gdx.graphics.getDeltaTime();
             for (Head head : heads) {
                 if (enemy.overlaps(head)) {
                     head.damage();

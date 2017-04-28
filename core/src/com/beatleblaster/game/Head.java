@@ -19,8 +19,8 @@ public class Head extends Rectangle {
         image = setImage;
         angle = setAngle;
         health = 15;
-        height = 30;
-        width = 30;
+        height = 40;
+        width = 40;
         color = setColor;
         gun = setGun;
         lastShotTime = 0;
